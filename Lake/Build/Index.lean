@@ -181,7 +181,7 @@ the initial set of Lake package facets (e.g., `extraDep`).
 Recursively build the given info using the Lake build index
 and a topological / suspending scheduler.
 -/
-@[specialize] def buildIndexTop' (info : BuildInfo) : CycleT BuildKey BuildStoreM (BuildData info.key) :=
+@[specialize] def buildIndexTop' (info : BuildInfo) : BuildConfigM (BuildData info.key) :=
   buildDTop BuildData BuildInfo.key recBuildIndex info
 
 /--
@@ -189,7 +189,7 @@ Recursively build the given info using the Lake build index
 and a topological / suspending scheduler and return the dynamic result.
 -/
 @[inline] def buildIndexTop (info : BuildInfo)
-[FamilyDef BuildData info.key α] : CycleT BuildKey BuildStoreM α := do
+[FamilyDef BuildData info.key α] : BuildConfigM α := do
   cast (by simp) <| buildIndexTop' info
 
 end

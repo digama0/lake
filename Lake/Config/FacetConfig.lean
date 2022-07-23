@@ -9,8 +9,7 @@ import Lake.Build.Topological
 
 namespace Lake
 
-abbrev BuildStoreM := StateT BuildStore BuildM
-abbrev BuildConfigM := CycleT BuildKey BuildStoreM
+abbrev BuildConfigM := CycleT BuildKey (StateT BuildStore BuildM)
 
 instance : MonadLift BuildM BuildConfigM := ⟨liftM⟩
 
