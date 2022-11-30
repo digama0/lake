@@ -25,19 +25,19 @@ namespace Lake
 /-! # Async / Await Abstraction -/
 --------------------------------------------------------------------------------
 
-class Sync (m : Type u → Type v) (n : outParam $ Type u' → Type w) (k : outParam $ Type u → Type u') where
+class Sync (m : Type u → Type v) (n : OutParam $ Type u' → Type w) (k : OutParam $ Type u → Type u') where
   /-- Run the monadic action as a synchronous task. -/
   sync : m α → n (k α)
 
 export Sync (sync)
 
-class Async (m : Type u → Type v) (n : outParam $ Type u' → Type w) (k : outParam $ Type u → Type u') where
+class Async (m : Type u → Type v) (n : OutParam $ Type u' → Type w) (k : OutParam $ Type u → Type u') where
   /-- Run the monadic action as an asynchronous task. -/
   async : m α → n (k α)
 
 export Async (async)
 
-class Await (k : Type u → Type v) (m : outParam $ Type u → Type w)  where
+class Await (k : Type u → Type v) (m : OutParam $ Type u → Type w)  where
   /-- Wait for an (a)synchronous task to finish. -/
   await : k α → m α
 
@@ -99,43 +99,43 @@ instance [Await k m] : Await (OptionT k) (OptionT m) where
 /-! # Combinators -/
 --------------------------------------------------------------------------------
 
-class BindSync (m : Type u → Type v) (n : outParam $ Type u' → Type w) (k : outParam $ Type u → Type u') where
+class BindSync (m : Type u → Type v) (n : OutParam $ Type u' → Type w) (k : OutParam $ Type u → Type u') where
   /-- Perform a synchronous action after another (a)synchronous task completes successfully. -/
   bindSync {α β : Type u} : k α → (α → m β) → n (k β)
 
 export BindSync (bindSync)
 
-class BindAsync (n : Type u → Type v) (k : outParam $ Type u → Type u) where
+class BindAsync (n : Type u → Type v) (k : OutParam $ Type u → Type u) where
   /-- Perform a asynchronous task after another (a)synchronous task completes successfully. -/
   bindAsync {α β : Type u} : k α → (α → n (k β)) → n (k β)
 
 export BindAsync (bindAsync)
 
-class SeqAsync (n : outParam $ Type u → Type v) (k : Type u → Type u) where
+class SeqAsync (n : OutParam $ Type u → Type v) (k : Type u → Type u) where
   /-- Combine two (a)synchronous tasks, applying the result of the second one ot the first one. -/
   seqAsync {α β : Type u} : k (α → β) → k α → n (k β)
 
 export SeqAsync (seqAsync)
 
-class SeqLeftAsync (n : outParam $ Type u → Type v) (k : Type u → Type u) where
+class SeqLeftAsync (n : OutParam $ Type u → Type v) (k : Type u → Type u) where
   /-- Combine two (a)synchronous tasks, returning the result of the first one. -/
   seqLeftAsync {α β : Type u} : k α → k β → n (k α)
 
 export SeqLeftAsync (seqLeftAsync)
 
-class SeqRightAsync (n : outParam $ Type u → Type v) (k : Type u → Type u) where
+class SeqRightAsync (n : OutParam $ Type u → Type v) (k : Type u → Type u) where
   /-- Combine two (a)synchronous tasks, returning the result of the second one. -/
   seqRightAsync {α β : Type u} : k α → k β → n (k β)
 
 export SeqRightAsync (seqRightAsync)
 
-class SeqWithAsync (n : outParam $ Type u → Type v) (k : Type u → Type u) where
+class SeqWithAsync (n : OutParam $ Type u → Type v) (k : Type u → Type u) where
   /-- Combine two (a)synchronous tasks using `f`. -/
   seqWithAsync {α β : Type u} : (f : α → β → γ) → k α → k β → n (k γ)
 
 export SeqWithAsync (seqWithAsync)
 
-class ApplicativeAsync (n : outParam $ Type u → Type v) (k : Type u → Type u)
+class ApplicativeAsync (n : OutParam $ Type u → Type v) (k : Type u → Type u)
 extends SeqAsync n k, SeqLeftAsync n k, SeqRightAsync n k, SeqWithAsync n k where
   seqAsync      := seqWithAsync fun f a => f a
   seqLeftAsync  := seqWithAsync fun a _ => a

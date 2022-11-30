@@ -23,7 +23,7 @@ An *open* type family, on the other hand, is a partial function that allows
 additional input to output mappings to be defined as needed.
 
 Lean does not (currently) directly support open type families.
-However, it does support type class *functional dependencies* (via `outParam`),
+However, it does support type class *functional dependencies* (via `OutParam`),
 and simple open type families can be modeled through functional dependencies,
 which is what we do here.
 
@@ -67,10 +67,10 @@ family_def bar : FooFam `bar := Nat
 The signature of the type class `FamilyDef` is
 
 ```
-FamilyDef {α : Type u} (Fam : α → Type v) (a : α) (β : outParam $ Type v) : Prop
+FamilyDef {α : Type u} (Fam : α → Type v) (a : α) (β : OutParam $ Type v) : Prop
 ```
 
-The key part being that `β` is an `outParam` so Lean's type class synthesis will
+The key part being that `β` is an `OutParam` so Lean's type class synthesis will
 smartly infer the defined type `Nat` when given the key of `` `bar``. Thus, if
 we have a function define like so:
 
@@ -134,7 +134,7 @@ Defines a single mapping of the **open type family** `Fam`, namely `Fam a = β`.
 See the module documentation of `Lake.Util.Family` for details what an open type
 family is in Lake.
 -/
-class FamilyDef {α : Type u} (Fam : α → Type v) (a : α) (β : outParam $ Type v) : Prop where
+class FamilyDef {α : Type u} (Fam : α → Type v) (a : α) (β : OutParam $ Type v) : Prop where
   family_key_eq_type : Fam a = β
 
 export FamilyDef (family_key_eq_type)

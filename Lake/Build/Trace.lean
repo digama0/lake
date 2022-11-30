@@ -24,7 +24,7 @@ instance : CheckExists FilePath where
 /-! # Trace Abstraction -/
 --------------------------------------------------------------------------------
 
-class ComputeTrace.{u,v,w} (i : Type u) (m : outParam $ Type v → Type w) (t : Type v) where
+class ComputeTrace.{u,v,w} (i : Type u) (m : OutParam $ Type v → Type w) (t : Type v) where
   /--  Compute the trace of some target info using information from the monadic context. -/
   computeTrace : i → m t
 
@@ -113,7 +113,7 @@ def ofByteArray (bytes : ByteArray) :=
 
 end Hash
 
-class ComputeHash (α : Type u) (m : outParam $ Type → Type v)  where
+class ComputeHash (α : Type u) (m : OutParam $ Type → Type v)  where
   computeHash : α → m Hash
 
 instance [ComputeHash α m] : ComputeTrace α m Hash := ⟨ComputeHash.computeHash⟩
